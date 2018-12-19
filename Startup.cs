@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebApi.Entities;
 using Microsoft.EntityFrameworkCore;
+using WebApi.IServices;
 
 namespace WebApi
 {
@@ -25,9 +26,6 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CDBlogDb>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("ConnectStr"))
-            );
             services.AddCors();
             services.AddMvc();
 

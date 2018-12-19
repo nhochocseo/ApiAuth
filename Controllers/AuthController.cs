@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Entities;
+using WebApi.IServices;
 using WebApi.Services;
 
 namespace WebApi.Controllers
@@ -13,7 +14,6 @@ namespace WebApi.Controllers
     public class AuthController : ControllerBase
     {
         private IUserService _userService;
-
         public AuthController(IUserService userService)
         {
             _userService = userService;

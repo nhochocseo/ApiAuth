@@ -9,34 +9,34 @@ using Microsoft.IdentityModel.Tokens;
 using WebApi.Entities;
 using WebApi.Helpers;
 using Newtonsoft.Json.Linq;
-
+using WebApi.IServices;
 
 namespace WebApi.Services
 {
-    public interface IUserService
-    {
-        UserToken Authenticate(string username, string password);
-        IEnumerable<User> GetAll();
-    }
+
 
     public class UserService : IUserService
     {
-        // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<User> _users = new List<User>
-        { 
-            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" } 
-        };
-
+        private CDBlogDb db = new CDBlogDb();
+        public UserService()
+        {
+        }
         private readonly AppSettings _appSettings;
-
+        public List<Users> GetListUser()
+        {
+            var data = db.Users.ToList();
+            return data;
+        }
         public UserService(IOptions<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
         }
 
+
         public UserToken Authenticate(string username, string password)
         {
-            var user = _users.SingleOrDefault(x => x.Username == username && x.Password == password);
+            //var user = _users.SingleOrDefault(x => x.Username == username && x.Password == password);
+            var user = db.Users.SingleOrDefault(x => x.UserName == username && x.Password == password);
 
             // return null if user not found
             if (user == null)
@@ -56,19 +56,12 @@ namespace WebApi.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var result = new UserToken();
-            result.Username = user.Username;
+            result.Username = user.UserName;
             result.Token = tokenHandler.WriteToken(token);
 
             return result;
         }
 
-        public IEnumerable<User> GetAll()
-        {
-            // return users without passwords
-            return _users.Select(x => {
-                x.Password = null;
-                return x;
-            });
-        }
+      
     }
 }
